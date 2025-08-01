@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>迷你Emoji鍵盤</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #2d2e30;
+        overflow: hidden;
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji";
+        user-select: none;
+      }
+
+      #keyboard {
+        width: 460px;
+        height: 200px;
+        background: #191a1b;
+        padding: 8px;
+        display: grid;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 6px;
+        box-sizing: border-box;
+      }
+
+      .key-row {
+        display: flex;
+        gap: 6px;
+      }
+
+      .key {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        background: #3a3b3d;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.1s;
+      }
+
+      .key:hover {
+        background: #4a4b4d;
+      }
+
+      .key:active {
+        transform: scale(0.95);
+        background: #0091ff;
+      }
+
+      .key-wide {
+        flex: 1.5;
+      }
+
+      .key-extra-wide {
+        flex: 2;
+      }
+
+      .key-space {
+        flex: 5;
+      }
+
+      #notification {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="keyboard">
+      <!-- 第一行 -->
+      <div class="key-row">
+        <button class="key">😀</button>
+        <button class="key">😂</button>
+        <button class="key">😍</button>
+        <button class="key">🤣</button>
+        <button class="key">👍</button>
+        <button class="key">👋</button>
+        <button class="key">🎉</button>
+        <button class="key">❤️</button>
+        <button class="key">🔥</button>
+        <button class="key">⌫</button>
+      </div>
+
+      <!-- 第二行 -->
+      <div class="key-row">
+        <button class="key key-wide">⇪</button>
+        <button class="key">🐱</button>
+        <button class="key">🐶</button>
+        <button class="key">🐼</button>
+        <button class="key">🦊</button>
+        <button class="key">🐵</button>
+        <button class="key">🦄</button>
+        <button class="key">🐲</button>
+        <button class="key key-wide">⏎</button>
+      </div>
+
+      <!-- 第三行 -->
+      <div class="key-row">
+        <button class="key key-extra-wide">⇧</button>
+        <button class="key">🍎</button>
+        <button class="key">🍕</button>
+        <button class="key">🍔</button>
+        <button class="key">🍟</button>
+        <button class="key">🍦</button>
+        <button class="key">🍩</button>
+        <button class="key key-extra-wide">⇧</button>
+      </div>
+
+      <!-- 第四行 -->
+      <div class="key-row">
+        <button class="key">🌍</button>
+        <button class="key">🌞</button>
+        <button class="key">🌈</button>
+        <button class="key key-space"></button>
+        <button class="key">⚽</button>
+        <button class="key">🎮</button>
+      </div>
+    </div>
+
+    <div id="notification">已複製</div>
+
+    <script>
+      // 複製功能
+      const keys = document.querySelectorAll(".key");
+      const notification = document.getElementById("notification");
+
+      keys.forEach((key) => {
+        if (
+          key.textContent.trim() !== "" &&
+          !["⇪", "⇧", "⏎", "⌫"].includes(key.textContent)
+        ) {
+          key.addEventListener("click", () => {
+            const emoji = key.textContent;
+            navigator.clipboard.writeText(emoji).then(() => {
+              showNotification(`已複製: ${emoji}`);
+            });
+          });
+        }
+      });
+
+      function showNotification(message) {
+        notification.textContent = message;
+        notification.style.opacity = 1;
+        setTimeout(() => {
+          notification.style.opacity = 0;
+        }, 1000);
+      }
+
+      // 防止視窗被拖動改變大小 (Electron專用)
+      if (typeof require !== "undefined") {
+        const { remote } = require("electron");
+        const win = remote.getCurrentWindow();
+        win.setResizable(false);
+        win.setSize(460, 200);
+      }
+    </script>
+  </body>
+</html>

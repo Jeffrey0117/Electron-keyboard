@@ -1,0 +1,2 @@
+# 明确告知 Git 不要处理 node_modules 内的文件
+node_modules/** -text
